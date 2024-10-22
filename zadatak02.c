@@ -90,17 +90,7 @@ void* ulazna_nit(void *param){
             /* Funkcija za unos karaktera sa tastature. */
             c = getch();
 
-            /* Ukoliko je unet karakter q ili Q signalizira se 
-               programskim nitima zavrsetak rada. */
-            if (c == 'q' || c == 'Q')
-            {
-                /* Zaustavljanje niti; Semafor se oslobadja 2 puta
-                da bi signaliziralo obema nitima.*/
-                sem_post(&semSignalKraja);
-                sem_post(&semSignalKraja);
-                break;
-            }
-
+            
             /* Pristup kruznom baferu. */
             pthread_mutex_lock(&ulaz_mutex);
             staviKarakter(&ulazni_bafer, c);
