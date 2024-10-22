@@ -17,18 +17,18 @@ struct UlazniKruzniBafer{
     unsigned char niz[RING_SIZE];
 };
 /* Operacije za rad sa kruznim baferom. */
-char uzmiKarakter (struct UlazniKruzniBafer *izlazbafer)
+char uzmiKarakter (struct UlazniKruzniBafer *ulaz_baf)
 {
     int index;
-    index = izlazbafer->glava;
-    izlazbafer->glava = (izlazbafer->glava + 1) % RING_SIZE;
-    return izlazbafer->niz[index];
+    index = ulaz_baf->glava;
+    ulaz_baf->glava = (ulaz_baf->glava + 1) % RING_SIZE;
+    return ulaz_baf->niz[index];
 }
 
-void staviKarakter (struct UlazniKruzniBafer *izlazbafer, const char c)
+void staviKarakter (struct UlazniKruzniBafer *ulaz_baf, const char c)
 {
-    izlazbafer->niz[izlazbafer->rep] = c;
-    izlazbafer->rep = (izlazbafer->rep + 1) % RING_SIZE;
+    ulaz_baf->niz[ulaz_baf->rep] = c;
+    ulaz_baf->rep = (ulaz_baf->rep + 1) % RING_SIZE;
 }
 
 /* Globalne promenljive. */
