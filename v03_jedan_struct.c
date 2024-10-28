@@ -48,7 +48,6 @@ void staviKarakter(struct KruzniBafer *baf, const char c) {
     
     pthread_mutex_unlock(&(baf->mutex));
     sem_post(&(baf->semPun));
-    
 }
 
 char UzmiKarakter(struct KruzniBafer *baf) {
@@ -68,19 +67,13 @@ char UzmiKarakter(struct KruzniBafer *baf) {
 void* ulazna_nit(void *param) {
     char c;
     while (1) {
-        if (sem_trywait(&(ulazni_bafer.semSignalKraja)) == 0) {
-            break;
-        }
-
         c = getch();
-        if (c == 3) {  // Ctrl+C signal za kraj
+        if (c == 'q') {  // Kada je unet 'q', postavlja se signal za kraj
             sem_post(&(ulazni_bafer.semSignalKraja)); 
             sem_post(&(izlazni_bafer.semSignalKraja)); 
             break;
         }
-
         staviKarakter(&ulazni_bafer, c);
-
     }
     return 0;
 }
@@ -90,19 +83,15 @@ void* obrada(void *param) {
 
     while (1) {
         if (sem_trywait(&(ulazni_bafer.semSignalKraja)) == 0) {
-            sem_post(&(izlazni_bafer.semSignalKraja));  // Prekid i za izlaznu nit
+            sem_post(&(izlazni_bafer.semSignalKraja));  // Signalizacija izlaznoj niti za kraj
             break;
         }
 
         c = UzmiKarakter(&ulazni_bafer);
-
-
         if (c >= 'a' && c <= 'z') {
             c -= 0x20;
         }
-
         staviKarakter(&izlazni_bafer, c);
-
         usleep(SLEEPING_TIME);
     }
     return 0;
@@ -115,12 +104,9 @@ void* izlazna_nit(void *param) {
         if (sem_trywait(&(izlazni_bafer.semSignalKraja)) == 0) {
             break;
         }
-
         c = UzmiKarakter(&izlazni_bafer);
-
         printf("%c", c);
         fflush(stdout);
-
         usleep(SLEEPING_TIME);
     }
     return 0;
